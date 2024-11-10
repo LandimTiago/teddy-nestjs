@@ -1,4 +1,4 @@
-import { Role } from '@Common/enums/role';
+import { Role } from '@Infrastructure/enums/role';
 import {
   BaseEntity,
   Column,
