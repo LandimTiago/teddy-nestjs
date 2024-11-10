@@ -1,12 +1,14 @@
 import { Role } from '@Infrastructure/enums/role';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User extends BaseEntity {
@@ -25,18 +27,18 @@ export class User extends BaseEntity {
   @Column({
     name: 'password',
     type: 'varchar',
-    length: 25,
     nullable: false,
+    select: false,
   })
   password: string;
 
-  @Column({ name: 'cpf', type: 'varchar', nullable: false })
+  @Column({ name: 'cpf', type: 'varchar', unique: true, nullable: false })
   cpf: string;
 
   @Column({ name: 'telefone', type: 'varchar', nullable: false })
   telefone: string;
 
-  @Column({ name: 'role', enum: Role, default: Role.USER })
+  @Column({ name: 'role', type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
@@ -47,13 +49,15 @@ export class User extends BaseEntity {
 
   constructor(user?: Partial<User>) {
     super();
-    this.id = user?.id;
-    this.name = user?.name;
-    this.username = user?.username;
-    this.password = user?.password;
-    this.cpf = user?.cpf;
-    this.telefone = user?.telefone;
-    this.created_at = user?.created_at;
-    this.updated_at = user?.updated_at;
+    Object.assign(this, user);
+  }
+
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async comparePassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
   }
 }
