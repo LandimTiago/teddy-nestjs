@@ -1,4 +1,46 @@
+# Diretório de saída de build
+dist/
+build/
+database/
+
+# Dependências instaladas
+node_modules/
+
+# Variáveis de ambiente
 .env
-node_modules
-dist
-database
+.env.*.local
+
+# Arquivos de configuração locais (caso você tenha arquivos de configuração específicos de cada ambiente)
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Diretórios temporários e de cache
+temp/
+tmp/
+.cache/
+.npm/
+yarn.lock
+
+# Arquivos de debug do TypeScript
+*.tsbuildinfo
+
+# Arquivos de IDEs
+.idea/
+.vscode/
+*.swp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos do Docker
+docker-compose.override.yml
+
+# Ignorar todos os arquivos exportados
+exports/
