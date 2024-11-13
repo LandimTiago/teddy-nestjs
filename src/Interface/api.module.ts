@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 
-export const routesV1 = [
+const routes = [
   {
     path: '/user',
     module: UserModule,
@@ -10,6 +10,6 @@ export const routesV1 = [
 ];
 
 @Module({
-  imports: [UserModule, RouterModule.register(routesV1)],
+  imports: [RouterModule.register(routes), UserModule],
 })
-export class V1Module {}
+export class ApiModule {}
