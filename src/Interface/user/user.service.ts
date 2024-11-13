@@ -1,3 +1,4 @@
+import { User } from '@Infrastructure/database/entity/user.entity';
 import {
   Injectable,
   InternalServerErrorException,
@@ -9,7 +10,6 @@ import { UserMapper } from './infra/mapper/userMapper';
 import { CreateUserDto } from './infra/request/create-user.dto';
 import { UpdateUserDto } from './infra/request/update-user.dto';
 import { UserResponseDto } from './infra/response/response-user.dto';
-import { User } from '@Infrastructure/database/entity/user.entity';
 
 @Injectable()
 export class UserService {
@@ -46,6 +46,21 @@ export class UserService {
       if (!user) throw new NotFoundException(`User ${id} not found!`);
 
       return UserMapper.userEntityToUserResponse(user);
+    } catch (error) {
+      throw new InternalServerErrorException(error, 'Error to find users');
+    }
+  }
+
+  async findOneByUsername(username: string): Promise<User> {
+    try {
+      const user = await this.repository.findOne({
+        where: { username },
+        select: ['name', 'password', 'username'],
+      });
+
+      if (!user) throw new NotFoundException(`User ${username} not found!`);
+
+      return user;
     } catch (error) {
       throw new InternalServerErrorException(error, 'Error to find users');
     }
